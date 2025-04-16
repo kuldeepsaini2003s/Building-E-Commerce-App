@@ -109,7 +109,7 @@ const Footer = () => {
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10
          text-center pt-2 text-gray-400 text-sm pb-8"
       >
-        <span>© No CopyRight Issues | @chandan |</span>
+        <span>© No CopyRight Issues | @kuldeep |</span>
         <span>Terms · Feel Free to Learn by cloning ideas & Knowledge</span>
         <div className="sm:block flex items-center justify-center w-full">
           <img
