@@ -1,3 +1,15 @@
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const LOCAL_BACKEND_URL = import.meta.env.VITE_LOCAL_BACKEND_URL;
+
+export const BACKEND_USER = `${BACKEND_URL}/user`;
+export const BACKEND_SHOP = `${BACKEND_URL}/shop`;
+export const BACKEND_PRODUCT = `${BACKEND_URL}/product`;
+export const BACKEND_ORDER = `${BACKEND_URL}/order`;
+export const BACKEND_EVENT = `${BACKEND_URL}/event`;
+export const BACKEND_COUPON = `${BACKEND_URL}/couponCode`;
+export const BACKEND_CONVERSATION = `${BACKEND_URL}/conversation`;
+export const BACKEND_MESSAGE = `${BACKEND_URL}/message`;
+
 export const brandingData = [
   {
     id: 1,
@@ -162,87 +174,83 @@ export const brandingData = [
   },
 ];
 
-// categories data
 export const categoriesData = [
   {
     id: 1,
-    title: "Computers and Laptops",
+    title: "Electronics & Gadgets",
     subTitle: "",
-    image_Url:
-      "https://cdn.shopify.com/s/files/1/1706/9177/products/NEWAppleMacbookProwithM1ProChip14InchLaptop2021ModelMKGQ3LL_A_16GB_1TBSSD_custommacbd.jpg?v=1659592838",
+    url: "/Computer and Laptop.jpg",
   },
   {
     id: 2,
-    title: "cosmetics and body care",
+    title: "Home & Kitchen Essentials",
     subTitle: "",
-    image_Url:
-      "https://indian-retailer.s3.ap-south-1.amazonaws.com/s3fs-public/2021-07/kosme1.png",
+    url: "/Cosmetic and Body Care.png",
   },
   {
     id: 3,
-    title: "Accesories",
+    title: "Men's Fashion",
     subTitle: "",
-    image_Url:
-      "https://img.freepik.com/free-vector/ordering-goods-online-internet-store-online-shopping-niche-e-commerce-website-mother-buying-babies-clothes-footwear-toys-infant-accessories_335657-2345.jpg?w=2000",
+    url: "/Accessories.jpg",
   },
   {
     id: 4,
-    title: "Cloths",
+    title: "Beauty & Personal Care",
     subTitle: "",
-    image_Url:
-      "https://www.shift4shop.com/2015/images/industries/clothing/clothing-apparel.png",
+    url: "/Cloths.jpg",
   },
   {
     id: 5,
-    title: "Shoes",
+    title: "Women's Fashion",
     subTitle: "",
-    image_Url:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvBQPQMVNRd6TtDkGs2dCri0Y-rxKkFOiEWw&usqp=CAU",
+    url: "/Cloths.jpg",
   },
   {
     id: 6,
-    title: "Gifts",
+    title: "Health & Wellness",
     subTitle: "",
-    image_Url:
-      "https://securecdn.pymnts.com/wp-content/uploads/2014/11/Gifts-Photo-700x489.jpg",
+    url: "/Shoes.png",
   },
   {
     id: 7,
-    title: "Pet Care",
+    title: "Gaming & Entertainment",
     subTitle: "",
-    image_Url: "https://cdn.openpr.com/T/c/Tc15444071_g.jpg",
+    url: "/Gift.jpg",
   },
   {
     id: 8,
-    title: "Mobile and Tablets",
+    title: "Smart Accessories",
     subTitle: "",
-    image_Url:
-      "https://st-troy.mncdn.com/mnresize/1500/1500/Content/media/ProductImg/original/mpwp3tua-apple-iphone-14-256gb-mavi-mpwp3tua-637986832343472449.jpg",
+    url: "/Pet and Care.png",
   },
   {
     id: 9,
-    title: "Music and Gaming",
+    title: "Pet & Lifestyle",
     subTitle: "",
-    image_Url:
-      "https://static.vecteezy.com/system/resources/previews/011/996/555/original/3d-black-headphone-illustration-ecommerce-icon-png.png",
+    url: "/Mobile and Tablets.png",
   },
   {
     id: 10,
-    title: "Others",
+    title: "Sports & Outdoors",
     subTitle: "",
-    image_Url:
-      "https://searchspring.com/wp-content/uploads/2022/10/Hero-Image-Platform-Others-2.png",
+    url: "/Music and Gaming.jpg",
+  },
+  {
+    id: 11,
+    title: "Grocery & Essentials",
+    subTitle: "",
+    url: "/Others.png",
   },
 ];
 
 export const footerProductLinks = [
   {
     name: "About us",
-    link: "/about"
+    link: "/about",
   },
   {
     name: "Careers",
-    link: "/carrers"
+    link: "/carrers",
   },
   {
     name: "Store Locations",
@@ -289,4 +297,39 @@ export const footerSupportLinks = [
   {
     name: "Live chat",
   },
+];
+
+export const faqData = [
+  {
+    question: "What is your return policy?",
+    answer: `If you're not satisfied with your purchase, we accept returns within 30 days of delivery. To initiate a return, please email us at support..myecommercestore.com with your order number and a brief explanation of why you're returning the item.`,
+  },
+  {
+    question: "How do I track my order?",
+    answer: `You can track your order by clicking the tracking link in your shipping confirmation email, or by logging into your account on our website and viewing the order details.`,
+  },
+  {
+    question: "How do I contact customer support?",
+    answer: `You can contact our customer support team by emailing us at support..myecommercestore.com, or by calling us at (555) 123-4567 between the hours of 9am and 5pm EST, Monday through Friday.`,
+  },
+  {
+    question: "Can I change or cancel my order?",
+    answer: `Unfortunately, once an order has been placed, we are not able to make changes or cancellations. If you no longer want the items you've ordered, you can return them for a refund within 30 days of delivery.`,
+  },
+  {
+    question: "Do you offer international shipping?",
+    answer: "Currently, we only offer shipping within the United States.",
+  },
+  {
+    question: "What payment methods do you accept?",
+    answer: `We accept Visa, MasterCard, PayPal payment method. We also have a cash on delivery system.`,
+  },
+];
+
+export const navigationLink = [
+  { title: "Home", link: "/" },
+  { title: "Best Selling", link: "/best-selling" },
+  { title: "Products", link: "/products" },
+  { title: "Events", link: "/events" },
+  { title: "FAQ", link: "/faq" },
 ];
