@@ -14,7 +14,14 @@ import OrderRoutes from "./routes/OrderRoute.js";
 
 dotenv.config();
 const app = express();
-app.use(cors({}));
+app.use(
+  cors({
+    credentials: true,
+    origin: [process.env.LOCAL_ORIGIN, process.env.FE_ORIGIN],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(cookieParser());
 app.use(express.json({ limit: "100kb" }));
 app.use(urlencoded({ limit: "100kb", extended: true }));
