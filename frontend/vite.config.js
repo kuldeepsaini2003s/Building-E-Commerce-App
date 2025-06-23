@@ -4,8 +4,13 @@ import tailwindcss from "@tailwindcss/vite";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  build: {
+    outDir: "dist",
+  },
   server: {
     host: "0.0.0.0", // 👈 allow access from any network interface
     port: 5173, // 👈 optional: use a fixed port
+    historyApiFallback: true,
   },
 });
+            
