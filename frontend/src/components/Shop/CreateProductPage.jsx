@@ -110,19 +110,26 @@ const CreateProduct = () => {
 
   const handleImageChange = (e) => {
     setImageError(false);
-    const files = Array.from(e.target.files);
+    let files = Array.from(e.target.files);
 
-    if (files.length > 0) {
-      const newPreview = files.map((file) => ({
-        url: URL.createObjectURL(file),
-      }));
-      const newImages = files.map((file) => ({
-        file,
-      }));
+    // ✅ Sort by number in the filename
+    files.sort((a, b) => {
+      const getNum = (name) => {
+        const match = name.match(/\d+/g); // extract all numbers
+        return match ? parseInt(match[match.length - 1]) : 0; // use last number
+      };
+      return getNum(a.name) - getNum(b.name);
+    });
 
-      setPreview((prev) => [...prev, ...newPreview]);
-      setImages((prev) => [...prev, ...newImages]);
-    }
+    const newPreview = files.map((file) => ({
+      url: URL.createObjectURL(file),
+    }));
+
+    const newImages = files.map((file) => ({ file }));
+
+    setPreview((prev) => [...prev, ...newPreview]);
+    setImages((prev) => [...prev, ...newImages]);
+
     e.target.value = "";
   };
 
