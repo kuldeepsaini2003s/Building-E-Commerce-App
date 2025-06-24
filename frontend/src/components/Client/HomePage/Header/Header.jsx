@@ -8,23 +8,26 @@ import { useSelector } from "react-redux";
 import { X } from "lucide-react";
 import styles from "../../../../utils/styles";
 
-const navigationLink = [
-  { title: "Home", link: "/" },
-  { title: "Best Selling", link: "/best-selling" },
-  { title: "Products", link: "/products" },
-  { title: "Events", link: "/events" },
-  { title: "Cart", link: "/cart" },
-  { title: "Wishlist", link: "/wishlist" },
-  { title: "FAQ", link: "/faq" },
-  { title: "Login", link: "/login" },
-];
-
 const Header = () => {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(null);
   const { cart: cartItems } = useSelector((state) => state.cart);
   const { shop } = useSelector((state) => state.shop);
   const { pathname } = useLocation();
+  const navigationLink = [
+    { title: "Home", link: "/" },
+    { title: "Best Selling", link: "/best-selling" },
+    { title: "Products", link: "/products" },
+    { title: "Events", link: "/events" },
+    { title: "Cart", link: "/cart" },
+    { title: "Wishlist", link: "/wishlist" },
+    { title: "FAQ", link: "/faq" },
+    {
+      title: shop ? "Seller Dashboard" : "Become Seller",
+      link: `${shop ? "/dashboard" : "/create-shop"}`,
+    },
+    { title: "Login", link: "/login" },
+  ];
 
   const handleToggleSidebar = () => {
     setOpen(!open);

@@ -178,67 +178,61 @@ export const categoriesData = [
   {
     id: 1,
     title: "Electronics & Gadgets",
-    subTitle: "",
     url: "/Computer and Laptop.jpg",
   },
   {
     id: 2,
     title: "Home & Kitchen Essentials",
-    subTitle: "",
     url: "/Cosmetic and Body Care.png",
   },
   {
     id: 3,
     title: "Men's Fashion",
-    subTitle: "",
     url: "/Accessories.jpg",
   },
   {
     id: 4,
     title: "Beauty & Personal Care",
-    subTitle: "",
     url: "/Cloths.jpg",
   },
   {
     id: 5,
     title: "Women's Fashion",
-    subTitle: "",
     url: "/Cloths.jpg",
   },
   {
     id: 6,
     title: "Health & Wellness",
-    subTitle: "",
     url: "/Shoes.png",
   },
   {
     id: 7,
     title: "Gaming & Entertainment",
-    subTitle: "",
     url: "/Gift.jpg",
   },
   {
     id: 8,
     title: "Smart Accessories",
-    subTitle: "",
     url: "/Pet and Care.png",
   },
   {
     id: 9,
     title: "Pet & Lifestyle",
-    subTitle: "",
     url: "/Mobile and Tablets.png",
   },
   {
     id: 10,
     title: "Sports & Outdoors",
-    subTitle: "",
     url: "/Music and Gaming.jpg",
   },
   {
     id: 11,
     title: "Grocery & Essentials",
-    subTitle: "",
+    url: "/Others.png",
+  },
+  {
+    id: 11,
+    title: "Automotive & Vehicles",
     url: "/Others.png",
   },
 ];
