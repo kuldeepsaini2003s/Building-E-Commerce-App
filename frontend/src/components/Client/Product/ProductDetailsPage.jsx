@@ -8,6 +8,7 @@ import { addToCart } from "../../../redux/cartSlice";
 import { Heart } from "lucide-react";
 import styles from "../../../utils/styles";
 import { BACKEND_PRODUCT } from "../../../utils/constants";
+import MagnifierImage from "./MagnifierImage";
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
@@ -61,11 +62,10 @@ const ProductDetailsPage = () => {
                       </div>
                     ))}
                 </div>
-                <div className="flex-grow w-full flex items-center justify-center max-h-[400px] min-h-[300px] sm:max-h-[400px] sm:min-h-[250px]">
-                  <img
+                <div className="flex-grow w-full flex items-center justify-center max-h-[400px] min-h-[300px] sm:max-h-[470px] sm:min-h-[250px]">
+                  <MagnifierImage
                     src={product?.images[selected].url}
                     alt="product image"
-                    className="w-auto h-full max-h-full object-contain rounded-md"
                   />
                 </div>
               </div>
