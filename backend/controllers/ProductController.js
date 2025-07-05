@@ -83,6 +83,36 @@ const createProduct = async (req, res) => {
   }
 };
 
+const allProducts = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, excludeIds = "" } = req.query;
+    const excluded = excludeIds.split(",").filter(Boolean);
+
+    const products = await Product.find({
+      _id: { $nin: excluded },
+    })
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({
+        success: false,
+        msg: "No products found",
+      });
+    }
+    return res.status(200).json({
+      success: true,
+      data: products,
+    });
+  } catch (error) {
+    console.log("Error while fetching all products", error);
+    return res.status(500).json({
+      success: false,
+      msg: "Something went wrong",
+    });
+  }
+};
+
 const getProductById = async (req, res) => {
   try {
     const productId = req.params.id;
@@ -314,4 +344,5 @@ export {
   deleteProduct,
   allCategory,
   productByCategory,
+  allProducts,
 };

@@ -1,8 +1,10 @@
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { FaRegCircleUser } from "react-icons/fa6";
+import useFetchAllProducts from "../../hooks/useFetchAllProducts";
 
 const DashboardHeader = () => {
+  useFetchAllProducts();
   const { shop } = useSelector((state) => state?.shop);
   return (
     <div className="w-full h-[55px] bg-white border-b border-gray-400 sticky top-0 left-0 z-30 flex items-center justify-between px-4 py-1">

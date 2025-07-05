@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useLoading } from "./LoadingProvider";
 import { useRef } from "react";
+import useResponseHandler from "./useResponseHandler";
 
 const useFetch = (url, options = {}) => {
+  const { handleError } = useResponseHandler();
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
   const { setIsLoading } = useLoading();
@@ -16,7 +18,6 @@ const useFetch = (url, options = {}) => {
     hasFetched.current = true;
 
     const fetchData = async () => {
-      setIsLoading(true);
       try {
         const data = await fetch(url, options);
         const json = await data.json();
@@ -27,6 +28,14 @@ const useFetch = (url, options = {}) => {
       } catch (error) {
         console.error("Error while fetching data", error);
         setError(error);
+        setIsLoading(false);
+        handleError({
+          error,
+          status: error?.response?.status,
+          message:
+            error?.response?.data?.msg ||
+            "Something went wrong please try again...",
+        });
       } finally {
         scrollTop();
       }

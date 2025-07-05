@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BACKEND_USER } from "../utils/constants";
 
-const useRefreshToken = () => {  
+const useRefreshToken = () => {
   const refreshAccessToken = async () => {
     try {
       const response = await axios.get(BACKEND_USER + "/refreshToken", {

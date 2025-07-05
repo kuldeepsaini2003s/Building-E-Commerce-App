@@ -79,7 +79,7 @@ const SingUp = () => {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-8 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto place-items-center sm:w-full sm:max-w-md">
+      <div className="w-full flex flex-col justify-center items-center">
         <Link to={"/"}>
           <img src="/logo.svg" alt="" />
         </Link>

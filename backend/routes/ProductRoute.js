@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   allCategory,
+  allProducts,
   createProduct,
   deleteProduct,
   getProductById,
@@ -15,6 +16,7 @@ const router = Router();
 
 router.post("/create", verifyToken, upload.array("images", 10), createProduct);
 router.get("/product", productByCategory);
+router.get("/products", allProducts);
 router.get("/categories", allCategory);
 router.get("/", verifyToken, shopAllProducts);
 router.get("/:id", getProductById);

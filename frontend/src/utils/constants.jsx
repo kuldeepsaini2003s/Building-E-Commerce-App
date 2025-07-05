@@ -1,9 +1,9 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const LOCAL_BACKEND_URL = import.meta.env.VITE_LOCAL_BACKEND_URL;
 
-export const BACKEND_USER = `${BACKEND_URL}/user`;
+export const BACKEND_USER = `${LOCAL_BACKEND_URL}/user`;
 export const BACKEND_SHOP = `${BACKEND_URL}/shop`;
-export const BACKEND_PRODUCT = `${BACKEND_URL}/product`;
+export const BACKEND_PRODUCT = `${LOCAL_BACKEND_URL}/product`;
 export const BACKEND_ORDER = `${BACKEND_URL}/order`;
 export const BACKEND_EVENT = `${BACKEND_URL}/event`;
 export const BACKEND_COUPON = `${BACKEND_URL}/couponCode`;
@@ -178,62 +178,62 @@ export const categoriesData = [
   {
     id: 1,
     title: "Electronics & Gadgets",
-    url: "/Computer and Laptop.jpg",
+    url: "/Electronics & Gadgets.png",
   },
   {
     id: 2,
     title: "Home & Kitchen Essentials",
-    url: "/Cosmetic and Body Care.png",
+    url: "/Home & Kitchen Essentials.png",
   },
   {
     id: 3,
     title: "Men's Fashion",
-    url: "/Accessories.jpg",
+    url: "/Men's fashion.png",
   },
   {
     id: 4,
     title: "Beauty & Personal Care",
-    url: "/Cloths.jpg",
+    url: "/Beauty & Personal Care.png",
   },
   {
     id: 5,
     title: "Women's Fashion",
-    url: "/Cloths.jpg",
+    url: "/Women's Fashion.png",
   },
   {
     id: 6,
     title: "Health & Wellness",
-    url: "/Shoes.png",
+    url: "/Health & Wellness.png",
   },
   {
     id: 7,
     title: "Gaming & Entertainment",
-    url: "/Gift.jpg",
+    url: "/Gaming & Entertainment.png",
   },
   {
     id: 8,
     title: "Smart Accessories",
-    url: "/Pet and Care.png",
+    url: "/Smart Accessories.png",
   },
   {
     id: 9,
     title: "Pet & Lifestyle",
-    url: "/Mobile and Tablets.png",
+    url: "/Pet & Lifestyle.png",
   },
   {
     id: 10,
     title: "Sports & Outdoors",
-    url: "/Music and Gaming.jpg",
+    url: "/Sports & Outdoors.avif",
   },
   {
     id: 11,
     title: "Grocery & Essentials",
-    url: "/Others.png",
+    url: "/Grocery & Essentials.avif",
   },
   {
     id: 11,
     title: "Automotive & Vehicles",
-    url: "/Others.png",
+    url: "/Automotive & Vehicles.png",
   },
 ];
 

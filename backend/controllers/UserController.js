@@ -383,11 +383,59 @@ const getUser = async (req, res) => {
   }
 };
 
+const refreshAccessToken = async (req, res) => {
+  try {
+    const token =
+      req.cookies.refreshToken || req.header("authorization")?.split(" ")[1];
+
+    if (!token) {
+      return res
+        .status(401)
+        .json({ success: false, message: "unauthorized request" });
+    }
+
+    const decoded = await jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id);
+
+    if (!user) {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+
+    if (token !== user.refreshToken) {
+      return res
+        .status(401)
+        .json({ success: false, message: "refresh token is not valid" });
+    }
+
+    const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+      user._id
+    );
+
+    user.refreshToken = refreshToken;
+    await user.save({ validateBeforeSave: false });
+
+    return res
+      .status(200)
+      .cookie("accessToken", accessToken, option)
+      .cookie("refreshToken", refreshToken, option)
+      .json({ success: true, accessToken, refreshToken });
+  } catch (error) {
+    console.log("Error refreshing access token", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" });
+  }
+};
+
 export {
   register,
   activeUser,
   forgotPassword,
   resetPassword,
+  refreshAccessToken,
   loginUser,
   logoutUser,
   getUser,

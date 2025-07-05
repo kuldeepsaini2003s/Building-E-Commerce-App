@@ -11,7 +11,7 @@ const Navbar = () => {
   const [dropDown, setDropDown] = useState(false);
 
   return (
-    <nav className="bg-primary text-white">
+    <nav className="sticky top-0 z-20 shadow-md bg-primary text-white">
       <div
         className={`${styles.section} mx-auto hidden min-[800px]:flex items-center justify-between py-4`}
       >

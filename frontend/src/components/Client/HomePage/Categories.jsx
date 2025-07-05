@@ -36,7 +36,7 @@ const Categories = () => {
                 >
                   <img
                     src={i.url}
-                    className="w-[100px] h-[80px] rounded-xl object-center mix-blend-multiply object-contain"
+                    className="w-[130px] h-[90px] rounded-xl object-center mix-blend-multiply object-contain"
                     alt="Category Image"
                   />
                   <h5 className={`max-sm:text-center leading-[1.3]`}>

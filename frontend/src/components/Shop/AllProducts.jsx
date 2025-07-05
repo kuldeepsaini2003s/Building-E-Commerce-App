@@ -127,8 +127,9 @@ const AllProducts = () => {
           rows={row}
           columns={columns}
           pageSize={10}
+          autoHeight={false}
+          // style={{ height: 530 }} // Let DataGrid manage scroll
           disableSelectionOnClick
-          autoHeight
         />
       </div>
     </>

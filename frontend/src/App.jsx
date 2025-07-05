@@ -16,7 +16,6 @@ import ProductDetailsPage from "./components/Client/Product/ProductDetailsPage";
 import { useDispatch } from "react-redux";
 import { setCartFromLocalStorage } from "./redux/cartSlice";
 import { setWishlistFromLocalStorage } from "./redux/wishlistSlice";
-import useFetchAllProducts from "./hooks/useFetchAllProducts";
 import SingUpShop from "./components/Shop/Auth/Signup";
 import LoginShop from "./components/Shop/Auth/Login";
 import Dashboard from "./components/Shop/Dashboard";
@@ -35,7 +34,6 @@ import ShopSettings from "./components/Shop/ShopSettings";
 import useFetchUserData from "./hooks/useFetchUserData";
 
 const App = () => {  
-  useFetchAllProducts()
   useFetchUserData();
   const { isLoading } = useLoading();
   const dispatch = useDispatch();
@@ -49,7 +47,7 @@ const App = () => {
 
   useEffect(() => {
     document.body.style.overflow = isLoading ? "hidden" : "auto";
-  }, [isLoading]);
+  }, [isLoading]);  
 
   const SellerSection = () => {
     return (

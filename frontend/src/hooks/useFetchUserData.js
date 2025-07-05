@@ -40,7 +40,6 @@ const useFetchUserData = () => {
       handleError({
         error,
         status: error?.response?.status,
-        toastId,
         message:
           error?.response?.data?.msg ||
           "Something went wrong please try again...",

@@ -1,9 +1,14 @@
-import { AiOutlineMessage, AiOutlineShoppingCart } from "react-icons/ai";
+import {
+  AiFillHeart,
+  AiOutlineHeart,
+  AiOutlineMessage,
+  AiOutlineShoppingCart,
+} from "react-icons/ai";
 import useFetch from "../../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { addToCart } from "../../../redux/cartSlice";
 import { Heart } from "lucide-react";
 import styles from "../../../utils/styles";
@@ -14,9 +19,22 @@ const ProductDetailsPage = () => {
   const { id } = useParams();
   const { data: product } = useFetch(`${BACKEND_PRODUCT}/${id}`);
   const { cart: cartItems } = useSelector((state) => state?.cart);
+  const { wishlist } = useSelector((state) => state?.wishlist);
   const dispatch = useDispatch();
   const [count, setCount] = useState(1);
   const [selected, setSelected] = useState(0);
+  const [isWishlistItem, setIsWishlistItem] = useState(false);
+
+  useEffect(() => {
+    if (wishlist) {
+      const item = wishlist.find((i) => i?._id === product?._id);
+      if (item) {
+        setIsWishlistItem(true);
+      } else {
+        setIsWishlistItem(false);
+      }
+    }
+  });
 
   const incrementCount = () => {
     setCount((prev) => prev + 1);
@@ -36,6 +54,12 @@ const ProductDetailsPage = () => {
       dispatch(addToCart({ ...product, qty: count }));
     }
   };
+
+  const bulletPoints = product?.description
+    .split("\r\n")
+    .filter((line) => line.trim() !== "")
+    .map((line) => `• ${line.trim()}`)
+    .join("\n");
 
   return (
     <div className="bg-white">
@@ -71,10 +95,7 @@ const ProductDetailsPage = () => {
               </div>
               <div className="min-[800px]:w-[50%] w-full ">
                 <h1 className={`${styles.productTitle}`}>{product.title}</h1>
-                <pre className="text-wrap font-sans line-clamp-5">
-                  {product.description}
-                </pre>
-                <div className="flex pt-3 items-center gap-10">
+                <div className="flex pt-5 items-center gap-10">
                   <div className="flex">
                     <h4 className={`${styles.productDiscountPrice}`}>
                       {product.originalPrice}$
@@ -85,7 +106,32 @@ const ProductDetailsPage = () => {
                         : null}
                     </h3>
                   </div>
-                  <Heart />
+                  {isWishlistItem ? (
+                    <Heart
+                      size={22}
+                      className="cursor-pointer"
+                      onClick={() => removeFromWishlistHandler(product)}
+                      color={isWishlistItem ? "red" : "#333"}
+                      title="Remove from wishlist"
+                    />
+                  ) : (
+                    <Heart
+                      size={22}
+                      className="cursor-pointer"
+                      onClick={() => addToWishlistHandler(product)}
+                      color={isWishlistItem ? "red" : "#333"}
+                      title="Add to wishlist"
+                    />
+                  )}
+                  <div>
+                    <h5 className="text-[15px]">
+                      {product.stock > 0 ? (
+                        <span className="text-green-500">In Stock</span>
+                      ) : (
+                        <span className="text-red-500">Out of Stock</span>
+                      )}
+                    </h5>
+                  </div>
                 </div>
 
                 <div className="flex items-center gap-10">
@@ -109,25 +155,7 @@ const ProductDetailsPage = () => {
                       +
                     </button>
                   </div>
-                  {/* <div>
-          {click ? (
-            <AiFillHeart
-              size={30}
-              className="cursor-pointer"
-              onClick={() => removeFromWishlistHandler(product)}
-              color={click ? "red" : "#333"}
-              title="Remove from wishlist"
-            />
-          ) : (
-            <AiOutlineHeart
-              size={30}
-              className="cursor-pointer"
-              onClick={() => addToWishlistHandler(product)}
-              color={click ? "red" : "#333"}
-              title="Add to wishlist"
-            />
-          )}
-        </div> */}
+                  <div></div>
                   <div
                     className={`${styles.button} max-sm:w-full !h-10 !rounded flex items-center`}
                     onClick={addProductToCart}
@@ -137,44 +165,24 @@ const ProductDetailsPage = () => {
                       <AiOutlineShoppingCart className="max-sm:text-2xl" />
                     </span>
                   </div>
-                </div>
-
-                <div className="flex items-center">
-                  {/* <Link href={`/shop/preview/${product?.shop._id}`}>
-                    <Image
-                      src={`${product?.shop?.avatar?.url}`}
-                      alt=""
-                      className="w-[50px] h-[50px] rounded-full mr-2"
-                    />
-                  </link> */}
-                  {/* <div className="pr-8">
-                    <Link href={`/shop/preview/${product?.shop._id}`}>
-                      <h3 className={`${styles.shop_name} pb-1 pt-1`}>
-                        {product.shop.name}
-                      </h3>
-                    </link>
-                    <h5 className="pb-3 text-[15px]">
-                      ({averageRating}/5) Ratings
-                    </h5>
-                  </div> */}
-                  <div
-                    className={`${styles.button} bg-[#6443d1] !h-10 !rounded`}
-                    // onClick={handleMessageSubmit}
-                  >
-                    <span className="text-white flex items-center gap-2">
-                      Send Message <AiOutlineMessage className="text-lg" />
-                    </span>
-                  </div>
+                </div>             
+                <div>
+                  <h5 className="text-xl font-semibold pb-2 pt-3">
+                    About Item
+                  </h5>
+                  <pre className="text-wrap text-sm font-sans">
+                    {bulletPoints}
+                  </pre>
                 </div>
               </div>
             </div>
           </div>
-          {/* <ProductDetailsInfo
+          <ProductDetailsInfo
             product={product}
-            products={products}
-            totalReviewsLength={totalReviewsLength}
-            averageRating={averageRating}
-          /> */}
+            // products={products}
+            // totalReviewsLength={totalReviewsLength}
+            // averageRating={averageRating}
+          />
         </div>
       ) : null}
     </div>
@@ -183,142 +191,147 @@ const ProductDetailsPage = () => {
 
 export default ProductDetailsPage;
 
-// const ProductDetailsInfo = ({
-//   product,
-//   products,
-//   totalReviewsLength,
-//   averageRating,
-// }) => {
-//   const [active, setActive] = useState(1);
+const ProductDetailsInfo = ({
+  product,
+  products,
+  totalReviewsLength,
+  averageRating,
+}) => {
+  const [active, setActive] = useState(1);
+  const bulletPoints = product?.description
+    .split("\r\n")
+    .filter((line) => line.trim() !== "")
+    .map((line) => `• ${line.trim()}`)
+    .join("\n");
 
-//   return (
-//     <div className="bg-[#f5f6fb] px-3 min-[800px]:px-10 py-2 rounded">
-//       <div className="w-full flex justify-between border-b pt-10 pb-2">
-//         <div className="relative">
-//           <h5
-//             className={
-//               "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer min-[800px]:text-[20px]"
-//             }
-//             onClick={() => setActive(1)}
-//           >
-//             Product Details
-//           </h5>
-//           {active === 1 ? (
-//             <div className={`${styles.active_indicator}`} />
-//           ) : null}
-//         </div>
-//         <div className="relative">
-//           <h5
-//             className={
-//               "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer min-[800px]:text-[20px]"
-//             }
-//             onClick={() => setActive(2)}
-//           >
-//             Product Reviews
-//           </h5>
-//           {active === 2 ? (
-//             <div className={`${styles.active_indicator}`} />
-//           ) : null}
-//         </div>
-//         <div className="relative">
-//           <h5
-//             className={
-//               "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer min-[800px]:text-[20px]"
-//             }
-//             onClick={() => setActive(3)}
-//           >
-//             Seller Information
-//           </h5>
-//           {active === 3 ? (
-//             <div className={`${styles.active_indicator}`} />
-//           ) : null}
-//         </div>
-//       </div>
-//       {active === 1 ? (
-//         <>
-//           <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
-//             {product.description}
-//           </p>
-//         </>
-//       ) : null}
+  return (
+    <div className="bg-gray-200 px-3 min-[800px]:px-5 py-5 my-5 rounded-md">
+      <div className="w-full flex justify-between pb-2">
+        <div className="relative">
+          <h5
+            className={
+              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer min-[800px]:text-[20px]"
+            }
+            onClick={() => setActive(1)}
+          >
+            Product Details
+          </h5>
+          {active === 1 ? (
+            <div className={`${styles.active_indicator}`} />
+          ) : null}
+        </div>
+        <div className="relative">
+          <h5
+            className={
+              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer min-[800px]:text-[20px]"
+            }
+            onClick={() => setActive(2)}
+          >
+            Product Reviews
+          </h5>
+          {active === 2 ? (
+            <div className={`${styles.active_indicator}`} />
+          ) : null}
+        </div>
+        <div className="relative">
+          <h5
+            className={
+              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer min-[800px]:text-[20px]"
+            }
+            onClick={() => setActive(3)}
+          >
+            Seller Information
+          </h5>
+          {active === 3 ? (
+            <div className={`${styles.active_indicator}`} />
+          ) : null}
+        </div>
+      </div>
+      {active === 1 ? (
+        <>
+          <pre className="py-2 text-[18px] leading-8 font-sans pb-10 whitespace-pre-line">
+            {bulletPoints}
+          </pre>
+        </>
+      ) : null}
 
-//       {active === 2 ? (
-//         <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
-//           {product &&
-//             product.reviews.map((item, index) => (
-//               <div className="w-full flex my-2">
-//                 <Image
-//                   src={`${item.user.avatar?.url}`}
-//                   alt=""
-//                   className="w-[50px] h-[50px] rounded-full"
-//                 />
-//                 <div className="pl-2 ">
-//                   <div className="w-full flex items-center">
-//                     <h1 className="font-[500] mr-3">{item.user.name}</h1>
-//                     <Ratings rating={product?.ratings} />
-//                   </div>
-//                   <p>{item.comment}</p>
-//                 </div>
-//               </div>
-//             ))}
+      {active === 2 ? (
+        <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
+          {product &&
+            product.reviews.map((item, index) => (
+              <div className="w-full flex my-2">
+                <img
+                  src={`${item.user.avatar?.url}`}
+                  alt=""
+                  className="w-[50px] h-[50px] rounded-full"
+                />
+                <div className="pl-2 ">
+                  <div className="w-full flex items-center">
+                    <h1 className="font-[500] mr-3">{item.user.name}</h1>
+                    <Ratings rating={item?.ratings} />
+                  </div>
+                  <p>{item.comment}</p>
+                </div>
+              </div>
+            ))}
 
-//           <div className="w-full flex justify-center">
-//             {product && product.reviews.length === 0 && (
-//               <h5>No Reviews have for this product!</h5>
-//             )}
-//           </div>
-//         </div>
-//       ) : null}
+          <div className="w-full flex justify-center">
+            {product && product.reviews.length === 0 && (
+              <h5>No Reviews have for this product!</h5>
+            )}
+          </div>
+        </div>
+      ) : null}
 
-//       {active === 3 && (
-//         <div className="w-full block min-[800px]:flex p-5">
-//           <div className="w-full min-[800px]:w-[50%]">
-//             <Link href={`/shop/preview/${product.shop._id}`}>
-//               <div className="flex items-center">
-//                 <Image
-//                   src={`${product?.shop?.avatar?.url}`}
-//                   className="w-[50px] h-[50px] rounded-full"
-//                   alt=""
-//                 />
-//                 <div className="pl-3">
-//                   <h3 className={`${styles.shop_name}`}>{product.shop.name}</h3>
-//                   <h5 className="pb-2 text-[15px]">
-//                     ({averageRating}/5) Ratings
-//                   </h5>
-//                 </div>
-//               </div>
-//             </link>
-//             <p className="pt-2">{product.shop.description}</p>
-//           </div>
-//           <div className="w-full min-[800px]:w-[50%] mt-5 min-[800px]:mt-0 min-[800px]:flex flex-col items-end">
-//             <div className="text-left">
-//               <h5 className="font-[600]">
-//                 Joined on:{" "}
-//                 <span className="font-[500]">
-//                   {product.shop?.createdAt?.slice(0, 10)}
-//                 </span>
-//               </h5>
-//               <h5 className="font-[600] pt-3">
-//                 Total Products:{" "}
-//                 <span className="font-[500]">
-//                   {products && products.length}
-//                 </span>
-//               </h5>
-//               <h5 className="font-[600] pt-3">
-//                 Total Reviews:{" "}
-//                 <span className="font-[500]">{totalReviewsLength}</span>
-//               </h5>
-//               <Link href="/">
-//                 <div
-//                   className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}
-//                 >
-//                   <h4 className="text-white">Visit Shop</h4>
-//                 </div>
-//               </link>
-//             </div>
-//           </div>
-//         </div>
-//       )}
-//     </div>
-//   );
-// };
+      {active === 3 && (
+        <div className="w-full block min-[800px]:flex p-5">
+          <div className="w-full min-[800px]:w-[50%]">
+            <Link href={`/shop/preview/${product.shop._id}`}>
+              <div className="flex items-center">
+                <img
+                  src={`${product?.shop?.avatar?.url}`}
+                  className="w-[50px] h-[50px] rounded-full"
+                  alt=""
+                />
+                <div className="pl-3">
+                  <h3 className={`${styles.shop_name}`}>{product.shop.name}</h3>
+                  <h5 className="pb-2 text-[15px]">
+                    ({averageRating}/5) Ratings
+                  </h5>
+                </div>
+              </div>
+            </Link>
+            <p className="pt-2">{product.shop.description}</p>
+          </div>
+          <div className="w-full min-[800px]:w-[50%] mt-5 min-[800px]:mt-0 min-[800px]:flex flex-col items-end">
+            <div className="text-left">
+              <h5 className="font-[600]">
+                Joined on:{" "}
+                <span className="font-[500]">
+                  {product.shop?.createdAt?.slice(0, 10)}
+                </span>
+              </h5>
+              <h5 className="font-[600] pt-3">
+                Total Products:{" "}
+                <span className="font-[500]">
+                  {products && products.length}
+                </span>
+              </h5>
+              <h5 className="font-[600] pt-3">
+                Total Reviews:{" "}
+                <span className="font-[500]">{totalReviewsLength}</span>
+              </h5>
+              <Link href="/">
+                <div
+                  className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}
+                >
+                  <h4 className="text-white">Visit Shop</h4>
+                </div>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};

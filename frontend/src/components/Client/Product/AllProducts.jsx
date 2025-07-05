@@ -1,18 +1,56 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ProductCard from "./ProductCard";
 import styles from "../../../utils/styles";
 import { useSearchParams } from "react-router-dom";
 import { BACKEND_PRODUCT } from "../../../utils/constants";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useLoading } from "../../../hooks/LoadingProvider";
+import { fetchProducts } from "../../../redux/actions/productAction";
+import ShimmerProductCard from "./ProductCardShimmer";
 
 const AllProducts = () => {
-  const { products } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
+  const loaderRef = useRef();
+  const { products, loading, hasMore, error } = useSelector(
+    (state) => state.product
+  );
   const [searchParams] = useSearchParams();
   const category = searchParams?.get("category");
   const [categoryData, setCategoryData] = useState([]);
   const { setIsLoading } = useLoading();
+  console.log(error);
+
+  const loadMore = useCallback(() => {
+    if (loading || error || !hasMore || category) return;
+    dispatch((dispatch, getState) =>
+      fetchProducts(dispatch, getState, setIsLoading)
+    );
+  }, [dispatch, loading, hasMore, category, setIsLoading]);
+
+  useEffect(() => {
+    if (!category && !loading && !error && hasMore) {
+      loadMore();
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!loaderRef.current && !error) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          loadMore();
+        }
+      },
+      { threshold: 1 }
+    );
+
+    const target = loaderRef.current;
+    if (target) observer.observe(target);
+
+    return () => target && observer.unobserve(target);
+  }, [loadMore]);
 
   const fetchCategoryData = async () => {
     setIsLoading(true);
@@ -25,9 +63,11 @@ const AllProducts = () => {
         setIsLoading(false);
       }
     } catch (error) {
-      console.log("Error while fetching data by category", error);
+      console.error("Error while fetching data by category", error);
       setIsLoading(false);
       setCategoryData([]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -56,7 +96,9 @@ const AllProducts = () => {
             No product found {category && "related to this category"}
           </h1>
         )}
+        {loading && !category && <ShimmerProductCard />}
       </div>
+      {!category && hasMore && <div ref={loaderRef} className="h-4" />}
     </div>
   );
 };

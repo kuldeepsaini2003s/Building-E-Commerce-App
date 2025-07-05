@@ -1,7 +1,9 @@
 import { toast } from "react-toastify";
 import useRefreshToken from "./useRefreshToken";
+import { useLoading } from "./LoadingProvider";
 
 const useResponseHandler = () => {
+  const { setIsLoading } = useLoading();
   const { refreshAccessToken } = useRefreshToken();
   const handleResponse = ({
     status,
@@ -12,6 +14,7 @@ const useResponseHandler = () => {
   }) => {
     if (status === 200 || status === 201) {
       onSuccess();
+      setIsLoading(false);
       if (showToast) {
         toast.update(toastId, {
           render: message,
@@ -35,6 +38,7 @@ const useResponseHandler = () => {
     if (error?.response?.status === 401) {
       refreshAccessToken();
     }
+    setIsLoading(false);
     if (showToast) {
       toast.update(toastId, {
         render: message,
