@@ -1,6 +1,6 @@
 import { useRef } from "react";
 
-const magnifierrImage = ({ src, alt, onZoom, onZoomEnd }) => {
+const magnifierImage = ({ src, alt, onZoom, onZoomEnd }) => {
   const imgRef = useRef(null);
   const zoom = 2.5;
   const lensSize = 120;
@@ -58,4 +58,4 @@ const magnifierrImage = ({ src, alt, onZoom, onZoomEnd }) => {
   );
 };
 
-export default magnifierrImage;
+export default magnifierImage;

@@ -8,7 +8,7 @@ import { addToCart } from "../../../redux/cartSlice";
 import { Heart } from "lucide-react";
 import styles from "../../../utils/styles";
 import { BACKEND_PRODUCT } from "../../../utils/constants";
-import magnifierrImage from "./magnifierrImage";
+import magnifierImage from "./magnifierImage";
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
@@ -85,7 +85,7 @@ const ProductDetailsPage = () => {
                 </div>
                 <div className="relative flex-grow w-full flex items-center justify-center max-h-[400px] min-h-[300px] sm:max-h-[470px] sm:min-h-[250px]">
                   <div className="relative w-full h-full">
-                    <magnifierrImage
+                    <magnifierImage
                       src={product.images[selected].url}
                       alt="product image"
                       onZoom={(data) => {
@@ -106,7 +106,6 @@ const ProductDetailsPage = () => {
                       />
                     )}
                   </div>
-                  
                 </div>
               </div>
               <div className="relative min-[800px]:w-[50%] w-full ">
