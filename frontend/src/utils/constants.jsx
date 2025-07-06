@@ -1,9 +1,9 @@
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const LOCAL_BACKEND_URL = import.meta.env.VITE_LOCAL_BACKEND_URL;
 
-export const BACKEND_USER = `${LOCAL_BACKEND_URL}/user`;
+export const BACKEND_USER = `${BACKEND_URL}/user`;
 export const BACKEND_SHOP = `${BACKEND_URL}/shop`;
-export const BACKEND_PRODUCT = `${LOCAL_BACKEND_URL}/product`;
+export const BACKEND_PRODUCT = `${BACKEND_URL}/product`;
 export const BACKEND_ORDER = `${BACKEND_URL}/order`;
 export const BACKEND_EVENT = `${BACKEND_URL}/event`;
 export const BACKEND_COUPON = `${BACKEND_URL}/couponCode`;
