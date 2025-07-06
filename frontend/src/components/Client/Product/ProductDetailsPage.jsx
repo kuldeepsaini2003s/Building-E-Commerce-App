@@ -1,9 +1,4 @@
-import {
-  AiFillHeart,
-  AiOutlineHeart,
-  AiOutlineMessage,
-  AiOutlineShoppingCart,
-} from "react-icons/ai";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 import useFetch from "../../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
@@ -13,7 +8,7 @@ import { addToCart } from "../../../redux/cartSlice";
 import { Heart } from "lucide-react";
 import styles from "../../../utils/styles";
 import { BACKEND_PRODUCT } from "../../../utils/constants";
-import MagnifierImage from "./MagnifierImage";
+import magnifierrImage from "./magnifierrImage";
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
@@ -24,6 +19,8 @@ const ProductDetailsPage = () => {
   const [count, setCount] = useState(1);
   const [selected, setSelected] = useState(0);
   const [isWishlistItem, setIsWishlistItem] = useState(false);
+  const [zoomCoords, setZoomCoords] = useState(null);
+  const [isZooming, setIsZooming] = useState(false);
 
   useEffect(() => {
     if (wishlist) {
@@ -86,23 +83,54 @@ const ProductDetailsPage = () => {
                       </div>
                     ))}
                 </div>
-                <div className="flex-grow w-full flex items-center justify-center max-h-[400px] min-h-[300px] sm:max-h-[470px] sm:min-h-[250px]">
-                  <MagnifierImage
-                    src={product?.images[selected].url}
-                    alt="product image"
-                  />
+                <div className="relative flex-grow w-full flex items-center justify-center max-h-[400px] min-h-[300px] sm:max-h-[470px] sm:min-h-[250px]">
+                  <div className="relative w-full h-full">
+                    <magnifierrImage
+                      src={product.images[selected].url}
+                      alt="product image"
+                      onZoom={(data) => {
+                        setIsZooming(true);
+                        setZoomCoords(data);
+                      }}
+                      onZoomEnd={() => setIsZooming(false)}
+                    />
+                    {isZooming && zoomCoords && (
+                      <div
+                        className="absolute border border-blue-400 border-dotted pointer-events-none"
+                        style={{
+                          width: 120,
+                          height: 120,
+                          left: zoomCoords.lensX,
+                          top: zoomCoords.lensY,
+                        }}
+                      />
+                    )}
+                  </div>
+                  
                 </div>
               </div>
-              <div className="min-[800px]:w-[50%] w-full ">
+              <div className="relative min-[800px]:w-[50%] w-full ">
+                {isZooming && zoomCoords && (
+                  <div
+                    className="absolute top-0 left-0 w-full max-h-[400px] min-h-[300px] sm:max-h-[470px] sm:min-h-[470px] border overflow-hidden rounded shadow-xl z-50"
+                    style={{
+                      backgroundImage: `url(${product?.images[selected].url})`,
+                      backgroundRepeat: "no-repeat",
+                      backgroundSize: `${zoomCoords.bgWidth}px ${zoomCoords.bgHeight}px`,
+                      backgroundPosition: `${zoomCoords.bgX}px ${zoomCoords.bgY}px`,
+                    }}
+                  />
+                )}
+
                 <h1 className={`${styles.productTitle}`}>{product.title}</h1>
                 <div className="flex pt-5 items-center gap-10">
                   <div className="flex">
                     <h4 className={`${styles.productDiscountPrice}`}>
-                      {product.originalPrice}$
+                      {product.discountPrice}$
                     </h4>
                     <h3 className={`${styles.price}`}>
-                      {product.discountPrice
-                        ? product.discountPrice + "$"
+                      {product.originalPrice
+                        ? product.originalPrice + "$"
                         : null}
                     </h3>
                   </div>
@@ -165,7 +193,7 @@ const ProductDetailsPage = () => {
                       <AiOutlineShoppingCart className="max-sm:text-2xl" />
                     </span>
                   </div>
-                </div>             
+                </div>
                 <div>
                   <h5 className="text-xl font-semibold pb-2 pt-3">
                     About Item

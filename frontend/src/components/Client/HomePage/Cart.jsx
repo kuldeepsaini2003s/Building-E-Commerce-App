@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { RiShoppingBag4Line } from "react-icons/ri";
 import styles from "../../../utils/styles";
+import { removeFromCart, updateCartQuantity } from "../../../redux/cartSlice";
+import { toast } from "react-toastify";
 
 const CartPage = () => {
   const { cart: cartItems } = useSelector((state) => state?.cart);
@@ -27,7 +29,7 @@ const CartPage = () => {
                 >
                   <img
                     className="w-28 h-40 max-[1100px]:w-full flex-shrink-0 min-[1100px]:h-28 max-[600px]:h-60 object-contain max-[600px]:object-contain object-top rounded-md"
-                    src={item?.thumbnail}
+                    src={item?.images[0]?.url}
                     alt="Product Image"
                   />
                   <div className="space-y-2 w-full">
@@ -83,7 +85,9 @@ const UpdateQuantityButton = ({ item }) => {
       className="min-[1100px]:space-y-4 text-sm max-[1100px]:flex justify-between"
     >
       <div className="space-y-2">
-        <h1 className="font-semibold">Price : ${item?.price * item?.qty}</h1>
+        <h1 className="font-semibold">
+          Price : ${item?.discountPrice * item?.qty}
+        </h1>
         <div>
           <button
             className="bg-gradient-to-r from-teal-400 h-7 to-teal-500 text-white font-bold rounded-l px-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
@@ -115,7 +119,10 @@ const UpdateQuantityButton = ({ item }) => {
 
 const BuyProduct = ({ cartItems }) => {
   const calculateTotalPrice = () => {
-    return cartItems.reduce((total, item) => total + item.price * item.qty, 0);
+    return cartItems.reduce(
+      (total, item) => total + item.discountPrice * item.qty,
+      0
+    );
   };
 
   // const handleBuyClick = async (productId) => {
@@ -145,6 +152,7 @@ const BuyProduct = ({ cartItems }) => {
   //   const rzp = new window.Razorpay(options);
   //   rzp.open();
   // };
+
   return (
     <div className="min-w-fit h-fit border max-[750px]:hidden max-[750px]:fixed top-5 right-5 max-[750px]:bg-white max-[750px]:w-28 min-[750px]:inset-0 border-gray-300 space-y-5 max-[500px]:self-end  rounded-md p-2 shadow-xl py-5">
       <h1 className="text-lg font-medium">
