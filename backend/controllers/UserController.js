@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { sendMail } from "../utils/sendMail.js";
 import jwt from "jsonwebtoken";
 import fs from "fs";
-import { User } from "../model/UserModel.js";
+import User from "../model/UserModel.js";
 
 const generateAccessAndRefreshToken = (user) => {
   const accessToken = generateToken(user, "10d");
@@ -430,6 +430,63 @@ const refreshAccessToken = async (req, res) => {
   }
 };
 
+const createUser = async (req, res) => {
+  try {
+    const { email, userName, password } = req?.body;
+
+    if (!email || !userName || !password) {
+      return res.status(400).json({
+        success: false,
+        msg: "All fields are required",
+      });
+    }
+
+    const existingUser = await User.findOne({ email });
+
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        msg: "User already exist",
+      });
+    }
+
+    const userDetails = {
+      email,
+      userName,
+      password,
+    };
+
+    const newUser = await User.create(userDetails);
+
+    return res.status(200).json({
+      success: true,
+      msg: "User created successfully",
+    });
+  } catch (error) {}
+};
+
+const userGet = async (req, res) => {
+  try {    
+    const user = await User?.findById(req?.user?._id);
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        msg: "User not found",
+      });
+    }
+
+    return res.status(200).json({
+      data: user,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      msg: "failed",
+    });
+  }
+};
+
 export {
   register,
   activeUser,
@@ -439,4 +496,5 @@ export {
   loginUser,
   logoutUser,
   getUser,
+  userGet,
 };

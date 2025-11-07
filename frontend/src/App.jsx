@@ -13,6 +13,7 @@ import { useLoading } from "./hooks/LoadingProvider";
 import Loader from "./utils/Loader";
 import EventCard from "./components/Client/HomePage/EventCard";
 import ProductDetailsPage from "./components/Client/Product/ProductDetailsPage";
+import OrderConfirmation from "./components/Client/Order/OrderConfirmation";
 import { useDispatch } from "react-redux";
 import { setCartFromLocalStorage } from "./redux/cartSlice";
 import { setWishlistFromLocalStorage } from "./redux/wishlistSlice";
@@ -33,7 +34,7 @@ import AllRefundOrders from "./components/Shop/AllRefundOrders";
 import ShopSettings from "./components/Shop/ShopSettings";
 import useFetchUserData from "./hooks/useFetchUserData";
 
-const App = () => {  
+const App = () => {
   useFetchUserData();
   const { isLoading } = useLoading();
   const dispatch = useDispatch();
@@ -47,7 +48,7 @@ const App = () => {
 
   useEffect(() => {
     document.body.style.overflow = isLoading ? "hidden" : "auto";
-  }, [isLoading]);  
+  }, [isLoading]);
 
   const SellerSection = () => {
     return (
@@ -79,6 +80,7 @@ const App = () => {
             <Route path="/cart" element={<Cart_Page />} />
             <Route path="/wishlist" element={<Wishlist_Page />} />
             <Route path="/product/:id" element={<ProductDetailsPage />} />
+            <Route path="/order-confirmation" element={<OrderConfirmation />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />

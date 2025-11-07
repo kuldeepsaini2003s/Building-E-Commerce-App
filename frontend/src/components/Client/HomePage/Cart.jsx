@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
 import cartImg from "/Cart_img.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { IoMdRemoveCircleOutline } from "react-icons/io";
 import { RiShoppingBag4Line } from "react-icons/ri";
 import styles from "../../../utils/styles";
@@ -118,6 +118,10 @@ const UpdateQuantityButton = ({ item }) => {
 };
 
 const BuyProduct = ({ cartItems }) => {
+  const navigate = useNavigate();
+  const { user } = useSelector((state) => state?.user);
+  const userToken = localStorage.getItem("accessToken");
+
   const calculateTotalPrice = () => {
     return cartItems.reduce(
       (total, item) => total + item.discountPrice * item.qty,
@@ -125,33 +129,26 @@ const BuyProduct = ({ cartItems }) => {
     );
   };
 
-  // const handleBuyClick = async (productId) => {
-  //   const order = await axios.post(
-  //     BASE_URL + "/payment/create",
-  //     {
-  //       productId: productId,
-  //     },
-  //     { withCredentials: true }
-  //   );
-  //   const { amount, keyId, currency, notes, orderId } = order.data;
-  //   const options = {
-  //     key: keyId,
-  //     amount,
-  //     currency,
-  //     name: "GraniMart",
-  //     description: "Shop MArvels",
-  //     order_id: orderId,
-  //     prefill: {
-  //       username: notes.username,
-  //       email: notes.emailId,
-  //     },
-  //     theme: {
-  //       color: "#F37254",
-  //     },
-  //   };
-  //   const rzp = new window.Razorpay(options);
-  //   rzp.open();
-  // };
+  const handleProceedToBuy = () => {
+    if (!user || !userToken) {
+      toast.error("Please login to continue");
+      navigate("/login");
+      return;
+    }
+
+    if (!cartItems || cartItems.length === 0) {
+      toast.error("Your cart is empty");
+      return;
+    }
+
+    // Navigate to order confirmation page
+    navigate("/order-confirmation", {
+      state: {
+        cartItems,
+        fromCart: true,
+      },
+    });
+  };
 
   return (
     <div className="min-w-fit h-fit border max-[750px]:hidden max-[750px]:fixed top-5 right-5 max-[750px]:bg-white max-[750px]:w-28 min-[750px]:inset-0 border-gray-300 space-y-5 max-[500px]:self-end  rounded-md p-2 shadow-xl py-5">
@@ -160,8 +157,8 @@ const BuyProduct = ({ cartItems }) => {
         {calculateTotalPrice()}
       </h1>
       <button
-        // onClick={() => handleBuyClick(15)}
-        className="px-5 w-full py-2 rounded-md font-medium bg-orange-400 flex gap-2 items-center justify-center cursor-pointer"
+        onClick={handleProceedToBuy}
+        className="px-5 w-full py-2 rounded-md font-medium bg-orange-400 flex gap-2 items-center justify-center cursor-pointer hover:bg-orange-500 transition-colors"
       >
         <RiShoppingBag4Line size={20} />
         Proceed to Buy{" "}

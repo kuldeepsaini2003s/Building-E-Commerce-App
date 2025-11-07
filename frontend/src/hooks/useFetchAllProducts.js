@@ -15,10 +15,11 @@ const useFetchAllProducts = () => {
   const userToken = localStorage.getItem("accessToken");
   const shopToken = localStorage.getItem("shopAccessToken");
 
+
   const shouldFetch = !products || products.length === 0 || !error;
 
   const url = shouldFetch
-    ? `${BACKEND_PRODUCT}${userToken ? "/products" : "/"}`
+    ? `${BACKEND_PRODUCT}${!shopToken ? "/products" : "/"}`
     : null;
 
   const token = shopToken

@@ -5,8 +5,8 @@ import jwt from "jsonwebtoken";
 import fs from "fs";
 import { option } from "./UserController.js";
 import { uploadOnCloudinary } from "../utils/uploadToCloudinary.js";
-import { Shop } from "../model/ShopModel.js";
-import { Product } from "../model/ProductModel.js";
+import Shop from "../model/ShopModel.js";
+import Product from "../model/ProductModel.js";
 
 const generateAccessAndRefreshToken = (shop) => {
   const accessToken = generateToken(shop, "10d");

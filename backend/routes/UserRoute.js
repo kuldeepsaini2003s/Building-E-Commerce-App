@@ -8,6 +8,7 @@ import {
   refreshAccessToken,
   register,
   resetPassword,
+  userGet,
 } from "../controllers/UserController.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import { upload } from "../middleware/multerMiddleware.js";
@@ -22,6 +23,6 @@ router.post("/login", loginUser);
 
 router.get("/logout", verifyToken, logoutUser);
 router.get("/refreshToken", refreshAccessToken);
-router.get("/", verifyToken, getUser);
+router.get("/", verifyToken, userGet);
 
 export default router;

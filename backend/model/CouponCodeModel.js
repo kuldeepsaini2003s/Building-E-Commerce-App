@@ -30,4 +30,6 @@ const couponCodeSchema = Schema({
   },
 });
 
-export const CouponCode = model("CouponCode", couponCodeSchema);
+const CouponCode = model("CouponCode", couponCodeSchema);
+
+export default CouponCode

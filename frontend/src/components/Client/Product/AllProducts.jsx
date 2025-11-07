@@ -19,7 +19,6 @@ const AllProducts = () => {
   const category = searchParams?.get("category");
   const [categoryData, setCategoryData] = useState([]);
   const { setIsLoading } = useLoading();
-  console.log(error);
 
   const loadMore = useCallback(() => {
     if (loading || error || !hasMore || category) return;

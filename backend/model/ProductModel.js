@@ -1,6 +1,6 @@
 import { model, Schema } from "mongoose";
 
-const productSchema = Schema({
+const productSchema = new Schema({
   title: {
     type: String,
     required: [true, "Please enter your product name!"],
@@ -72,4 +72,6 @@ const productSchema = Schema({
   },
 });
 
-export const Product = model("Product", productSchema);
+const Product = model("Product", productSchema);
+
+export default Product;

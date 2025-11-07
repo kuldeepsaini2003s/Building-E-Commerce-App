@@ -1,5 +1,5 @@
-import { Event } from "../model/EventModel.js";
-import { Shop } from "../model/ShopModel.js";
+import Event from "../model/EventModel.js";
+import Shop from "../model/ShopModel.js";
 import { uploadOnCloudinary } from "../utils/uploadToCloudinary.js";
 
 // Create a new event

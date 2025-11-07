@@ -4,7 +4,7 @@ import styles from "../../../../utils/styles";
 
 const DropDown = ({ setDropDown }) => {
   return (
-    <div className="pb-4 w-[16rem] rounded-b-md text-black bg-[#fff] absolute z-30 rounded-b-md shadow-sm">
+    <div className="pb-4 w-[16rem] categoryScrollbar rounded-b-md text-black bg-[#fff] h-[30rem] overflow-y-scroll absolute z-30 rounded-b-md shadow-sm">
       {categoriesData &&
         categoriesData.map((i, index) => (
           <Link key={index} to={`/products?category=${i.title}`}>

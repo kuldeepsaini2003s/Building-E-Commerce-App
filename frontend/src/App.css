@@ -50,3 +50,22 @@ input[type="number"].no-spinner::-webkit-outer-spin-button {
 input[type="number"].no-spinner {
   -moz-appearance: textfield; /* Firefox */
 }
+
+.categoryScrollbar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.categoryScrollbar {
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.categoryScrollbar::-webkit-scrollbar {
+  height: 2px!important;
+}
+
+.categoryScrollbar::-webkit-scrollbar-thumb {  
+  margin: 2px 0;
+  background: #000;
+  border-radius: 10px;
+}

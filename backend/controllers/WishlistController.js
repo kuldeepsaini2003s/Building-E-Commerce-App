@@ -4,9 +4,9 @@ import bcrypt from "bcrypt";
 import { sendMail } from "../utils/sendMail.js";
 import jwt from "jsonwebtoken";
 import fs from "fs";
-import { Shop } from "../models/shopModel.js";
+import Shop from "../models/shopModel.js";
 import { option } from "./UserController.js";
-import { Product } from "../models/productModel.js";
+import Product from "../models/productModel.js";
 
 const generateAccessAndRefreshToken = (shop) => {
   const accessToken = generateToken(shop, "10d");
@@ -289,7 +289,7 @@ const updateShop = async (req, res) => {
     if (newAvatar) shop.avatar = newAvatar.secure_url;
     if (name) shop.name = name;
     if (description) shop.description = description;
-    if (phoneNumber) shop.phoneNumber = phoneNumber;    
+    if (phoneNumber) shop.phoneNumber = phoneNumber;
 
     await shop.save();
 
@@ -326,7 +326,7 @@ const getShopInfo = async (req, res) => {
     const shopInfo = {
       name: shop.name,
       email: shop.email,
-      avatar: shop.avatar,      
+      avatar: shop.avatar,
       phoneNumber: shop.phoneNumber,
       totalProducts,
       shopRating,

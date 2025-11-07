@@ -15,4 +15,6 @@ const cartSchema = Schema({
   },
 });
 
-export const Cart = model("Cart", cartSchema);
+const Cart = model("Cart", cartSchema);
+
+export default Cart

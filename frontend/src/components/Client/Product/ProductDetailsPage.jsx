@@ -3,17 +3,20 @@ import useFetch from "../../../hooks/useFetch";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { addToCart } from "../../../redux/cartSlice";
 import { Heart } from "lucide-react";
 import styles from "../../../utils/styles";
-import { BACKEND_PRODUCT } from "../../../utils/constants";
+import { BACKEND_ORDER, BACKEND_PRODUCT } from "../../../utils/constants";
 import MagnifierImage from "./MagnifierImage";
+import axios from "axios";
 
 const ProductDetailsPage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { data: product } = useFetch(`${BACKEND_PRODUCT}/${id}`);
   const { cart: cartItems } = useSelector((state) => state?.cart);
+  const { user } = useSelector((state) => state?.user);
   const { wishlist } = useSelector((state) => state?.wishlist);
   const dispatch = useDispatch();
   const [count, setCount] = useState(1);
@@ -21,6 +24,7 @@ const ProductDetailsPage = () => {
   const [isWishlistItem, setIsWishlistItem] = useState(false);
   const [zoomCoords, setZoomCoords] = useState(null);
   const [isZooming, setIsZooming] = useState(false);
+  const userToken = localStorage.getItem("accessToken");
 
   useEffect(() => {
     if (wishlist) {
@@ -42,6 +46,7 @@ const ProductDetailsPage = () => {
       setCount((prev) => prev - 1);
     }
   };
+
   const addProductToCart = () => {
     const item = cartItems?.find((item) => item?._id === product?._id);
     if (item) {
@@ -50,6 +55,24 @@ const ProductDetailsPage = () => {
       toast.success("Item added to cart successfully!");
       dispatch(addToCart({ ...product, qty: count }));
     }
+  };
+
+  const handleOrder = () => {
+    if (!user || !userToken) {
+      toast.error("Please login to continue");
+      return;
+    }
+
+    // Navigate to order confirmation page
+    navigate("/order-confirmation", {
+      state: {
+        productData: {
+          ...product,
+          quantity: count,
+        },
+        fromCart: false,
+      },
+    });
   };
 
   const bulletPoints = product?.description
@@ -182,8 +205,7 @@ const ProductDetailsPage = () => {
                       +
                     </button>
                   </div>
-                  <div></div>
-                  <div
+                  <button
                     className={`${styles.button} max-sm:w-full !h-10 !rounded flex items-center`}
                     onClick={addProductToCart}
                   >
@@ -191,7 +213,13 @@ const ProductDetailsPage = () => {
                       Add to cart{" "}
                       <AiOutlineShoppingCart className="max-sm:text-2xl" />
                     </span>
-                  </div>
+                  </button>
+                  <button
+                    onClick={handleOrder}
+                    className={`w-[150px] font-semibold text-black bg-[#FFBB38] h-[50px] my-3 flex items-center justify-center rounded-xl cursor-pointer max-sm:w-full !h-10 !rounded flex items-center`}
+                  >
+                    <span className="flex items-center gap-2">Buy Now</span>
+                  </button>
                 </div>
                 <div>
                   <h5 className="text-xl font-semibold pb-2 pt-3">

@@ -1,6 +1,6 @@
-import { Cart } from "../model/CartModel.js";
-import { Product } from "../model/ProductModel.js";
-import { User } from "../model/UserModel.js";
+import Cart from "../model/CartModel.js";
+import Product from "../model/ProductModel.js";
+import User from "../model/UserModel.js";
 
 const addToCart = async (req, res) => {
   try {

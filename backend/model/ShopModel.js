@@ -67,4 +67,6 @@ const shopSchema = Schema({
   ],
 });
 
-export const Shop = model("Shop", shopSchema);
+const Shop = model("Shop", shopSchema);
+
+export default Shop

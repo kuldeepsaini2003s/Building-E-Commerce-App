@@ -1,5 +1,6 @@
-import { Product } from "../model/ProductModel.js";
-import { Shop } from "../model/ShopModel.js";
+import mongoose from "mongoose";
+import Product from "../model/ProductModel.js";
+import Shop from "../model/ShopModel.js";
 import { uploadOnCloudinary } from "../utils/uploadToCloudinary.js";
 
 const createProduct = async (req, res) => {
@@ -83,16 +84,19 @@ const createProduct = async (req, res) => {
   }
 };
 
-const allProducts = async (req, res) => {
+const homePageProducts = async (req, res) => {
   try {
-    const { page = 1, limit = 20, excludeIds = "" } = req.query;
+    const { limit = 20, excludeIds = "" } = req.query;
     const excluded = excludeIds.split(",").filter(Boolean);
 
-    const products = await Product.find({
-      _id: { $nin: excluded },
-    })
-      .skip((page - 1) * limit)
-      .limit(parseInt(limit));
+    const products = await Product.aggregate([
+      {
+        $match: {
+          _id: { $nin: excluded.map((id) => new mongoose.Types.ObjectId(id)) },
+        },
+      },
+      { $sample: { size: parseInt(limit) } },
+    ]);
 
     if (!products || products.length === 0) {
       return res.status(404).json({
@@ -100,12 +104,50 @@ const allProducts = async (req, res) => {
         msg: "No products found",
       });
     }
+
     return res.status(200).json({
       success: true,
       data: products,
     });
   } catch (error) {
-    console.log("Error while fetching all products", error);
+    console.log("Error while fetching shuffled products", error);
+    return res.status(500).json({
+      success: false,
+      msg: "Something went wrong",
+    });
+  }
+};
+
+const allProducts = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, excludeIds = "" } = req.query;
+    const excluded = excludeIds.split(",").filter(Boolean);
+    const parsedLimit = parseInt(limit);
+    const skip = (page - 1) * parsedLimit;
+
+    const products = await Product.find({
+      _id: { $nin: excluded },
+    })
+      .skip(skip)
+      .limit(parsedLimit)
+      .lean(); // slightly faster
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({
+        success: false,
+        msg: "No products found",
+      });
+    }
+
+    // Shuffle the fetched page
+    const shuffledProducts = products.sort(() => Math.random() - 0.5);
+
+    return res.status(200).json({
+      success: true,
+      data: shuffledProducts,
+    });
+  } catch (error) {
+    console.log("Error while fetching paginated shuffled products", error);
     return res.status(500).json({
       success: false,
       msg: "Something went wrong",
@@ -336,6 +378,39 @@ const productByCategory = async (req, res) => {
   }
 };
 
+const bestSellingProducts = async (req, res) => {
+  try {
+    const { page = 1, limit = 20, excludeIds = "" } = req.query;
+    const excluded = excludeIds.split(",").filter(Boolean);
+
+    const products = await Product.find({
+      _id: { $nin: excluded },
+      isBestSelling: true,
+    })
+      .skip((page - 1) * limit)
+      .limit(parseInt(limit));
+
+    if (!products || products.length === 0) {
+      return res.status(404).json({
+        success: false,
+        msg: "No best selling products found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      msg: "Best selling products fetched successfully",
+      data: products,
+    });
+  } catch (error) {
+    console.log("Error while fetching best selling products", error);
+    return res.status(500).json({
+      success: false,
+      msg: "Something went wrong",
+    });
+  }
+};
+
 export {
   createProduct,
   shopAllProducts,
@@ -345,4 +420,5 @@ export {
   allCategory,
   productByCategory,
   allProducts,
+  bestSellingProducts,
 };

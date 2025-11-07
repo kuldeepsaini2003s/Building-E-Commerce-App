@@ -1,6 +1,6 @@
-import { CouponCode } from "../model/CouponCodeModel.js";
-import { Product } from "../model/ProductModel.js";
-import { Shop } from "../model/ShopModel.js";
+import CouponCode from "../model/CouponCodeModel.js";
+import Product from "../model/ProductModel.js";
+import Shop from "../model/ShopModel.js";
 
 export const createCouponCode = async (req, res, next) => {
   try {
