@@ -8,6 +8,7 @@ import {
   refreshAccessToken,
   register,
   resetPassword,
+  updateUser,
   userGet,
 } from "../controllers/UserController.js";
 import { verifyToken } from "../middleware/authMiddleware.js";
@@ -24,5 +25,6 @@ router.post("/login", loginUser);
 router.get("/logout", verifyToken, logoutUser);
 router.get("/refreshToken", refreshAccessToken);
 router.get("/", verifyToken, userGet);
+router.put("/", verifyToken, upload.single("avatar"), updateUser);
 
 export default router;

@@ -143,7 +143,7 @@ const activeShop = async (req, res) => {
 
     const { otp, shopData } = tokenVerification;
 
-    if (!otp === activation_otp) {
+    if (otp !== activation_otp) {
       return res.status(400).json({
         success: false,
         msg: "Invalid OTP.",
@@ -410,7 +410,7 @@ const resetPassword = async (req, res) => {
 
     const otp = tokenVerification.otp;
 
-    if (!otp === activation_otp) {
+    if (otp !== activation_otp) {
       return res.status(400).json({
         success: false,
         msg: "Invalid OTP",

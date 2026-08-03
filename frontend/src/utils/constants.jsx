@@ -1,7 +1,7 @@
 const PRODUCTION_BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 const LOCAL_BACKEND_URL = import.meta.env.VITE_LOCAL_BACKEND_URL;
 
-const BACKEND_URL = PRODUCTION_BACKEND_URL;
+const BACKEND_URL = LOCAL_BACKEND_URL;
 
 export const BACKEND_USER = `${BACKEND_URL}/user`;
 export const BACKEND_SHOP = `${BACKEND_URL}/shop`;

@@ -1,11 +1,23 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import DropDown from "./DropDown";
-import { AlignLeft, ChevronDown, Heart, ShoppingCart } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  AlignLeft,
+  ChevronDown,
+  Heart,
+  LogOut,
+  ShoppingCart,
+  UserRound,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { navigationLink } from "../../../../utils/constants";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+import { toast } from "react-toastify";
 import styles from "../../../../utils/styles";
+import { BACKEND_USER } from "../../../../utils/constants";
+import { setUser } from "../../../../redux/userSlice";
 
 const Navbar = () => {
   const [dropDown, setDropDown] = useState(false);
@@ -83,9 +95,48 @@ export const LinkIcons = ({ setDropDown }) => {
   const { cart: cartItems } = useSelector((state) => state?.cart);
   const { wishlist: wishlistItems } = useSelector((state) => state?.wishlist);
   const { user } = useSelector((state) => state?.user);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const profileMenuRef = useRef(null);
+
+  useEffect(() => {
+    const closeProfileMenu = (event) => {
+      if (!profileMenuRef.current?.contains(event.target)) {
+        setIsProfileMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", closeProfileMenu);
+    document.addEventListener("touchstart", closeProfileMenu);
+
+    return () => {
+      document.removeEventListener("mousedown", closeProfileMenu);
+      document.removeEventListener("touchstart", closeProfileMenu);
+    };
+  }, []);
 
   const closeDropDown = () => {
     setDropDown(false);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await axios.get(`${BACKEND_USER}/logout`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+    } catch (error) {
+      console.error("Error while logging out:", error);
+    } finally {
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      dispatch(setUser(null));
+      setIsProfileMenuOpen(false);
+      toast.success("Logged out successfully");
+      navigate("/login");
+    }
   };
 
   return (
@@ -107,13 +158,43 @@ export const LinkIcons = ({ setDropDown }) => {
             </span>
           </div>
         </Link>
-        <div className="mx-2">
+        <div ref={profileMenuRef} className="relative mx-2">
           {user ? (
-            <img
-              className="h-10 w-10 object-cover rounded-full object-center"
-              src={user?.avatar}
-              alt=""
-            />
+            <>
+              <button
+                type="button"
+                onClick={() => setIsProfileMenuOpen((isOpen) => !isOpen)}
+                className="block rounded-full focus:outline-none focus:ring-2 focus:ring-white"
+                aria-label="Open account menu"
+                aria-expanded={isProfileMenuOpen}
+              >
+                <img
+                  className="h-10 w-10 object-cover rounded-full object-center"
+                  src={user?.avatar || "/Photo.png"}
+                  alt="Profile"
+                />
+              </button>
+              {isProfileMenuOpen && (
+                <div className="absolute right-0 top-12 z-30 w-32 rounded-md bg-white py-1 text-sm text-gray-700 shadow-lg">
+                  <Link
+                    to="/profile"
+                    onClick={() => setIsProfileMenuOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 hover:bg-gray-100"
+                  >
+                    <UserRound size={16} />
+                    Profile
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={handleLogout}
+                    className="flex w-full items-center gap-2 px-4 py-2 text-left font-medium text-red-600 transition-colors hover:bg-red-50 hover:text-red-700 focus:bg-red-50 focus:outline-none"
+                  >
+                    <LogOut size={16} />
+                    Logout
+                  </button>
+                </div>
+              )}
+            </>
           ) : (
             <Link to={"/login"}>
               <CgProfile size={27} />

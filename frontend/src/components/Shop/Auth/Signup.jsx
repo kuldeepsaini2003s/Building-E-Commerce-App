@@ -7,7 +7,6 @@ import { Link, useNavigate } from "react-router-dom";
 import styles from "../../../utils/styles";
 import { useDispatch } from "react-redux";
 import useResponseHandler from "../../../hooks/useResponseHandler";
-import { setUser } from "../../../redux/userSlice";
 import { BACKEND_SHOP } from "../../../utils/constants";
 import { setShop } from "../../../redux/shopSlice";
 
@@ -17,6 +16,14 @@ const SingUpShop = () => {
   const [avatar, setAvatar] = useState("/Photo.png");
   const [verificationSection, setVerificationSection] = useState(false);
   const [file, setFile] = useState(null);
+  const [registrationData, setRegistrationData] = useState({
+    name: "",
+    phone: "",
+    email: "",
+    address: "",
+    pinCode: "",
+    password: "",
+  });
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -26,15 +33,14 @@ const SingUpShop = () => {
     }
   };
 
-  const [formData, submitAction, isPending] = useActionState(
+  const [, submitAction, isPending] = useActionState(
     async (previousState, formData) => {
-      const name = formData?.get("name") || previousState?.name || "";
-      const email = formData?.get("email") || previousState?.email || "";
-      const address = formData?.get("address") || previousState?.address || "";
-      const phone = formData?.get("phone") || previousState?.phone || "";
-      const pinCode = formData?.get("pinCode") || previousState?.pinCode || "";
-      const password =
-        formData?.get("password") || previousState?.password || "";
+      const name = formData?.get("name") || registrationData.name;
+      const email = formData?.get("email") || registrationData.email;
+      const address = formData?.get("address") || registrationData.address;
+      const phone = formData?.get("phone") || registrationData.phone;
+      const pinCode = formData?.get("pinCode") || registrationData.pinCode;
+      const password = formData?.get("password") || registrationData.password;
 
       const payload = new FormData();
 
@@ -79,7 +85,7 @@ const SingUpShop = () => {
           showToast: true,
           message: error?.response?.data?.msg || "Failed to create user.",
         });
-        return { name, email, password, address, pinCode, phone };
+        return previousState;
       }
     }
   );
@@ -111,7 +117,13 @@ const SingUpShop = () => {
                     name="name"
                     autoComplete="name"
                     required
-                    value={formData?.name}
+                    value={registrationData.name}
+                    onChange={(event) =>
+                      setRegistrationData((current) => ({
+                        ...current,
+                        name: event.target.value,
+                      }))
+                    }
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
@@ -129,7 +141,13 @@ const SingUpShop = () => {
                     name="phone"
                     autoComplete="number"
                     required
-                    value={formData?.phone}
+                    value={registrationData.phone}
+                    onChange={(event) =>
+                      setRegistrationData((current) => ({
+                        ...current,
+                        phone: event.target.value,
+                      }))
+                    }
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
@@ -148,7 +166,13 @@ const SingUpShop = () => {
                     name="email"
                     autoComplete="email"
                     required
-                    value={formData?.email}
+                    value={registrationData.email}
+                    onChange={(event) =>
+                      setRegistrationData((current) => ({
+                        ...current,
+                        email: event.target.value,
+                      }))
+                    }
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
@@ -167,7 +191,13 @@ const SingUpShop = () => {
                     name="address"
                     autoComplete="address"
                     required
-                    value={formData?.address}
+                    value={registrationData.address}
+                    onChange={(event) =>
+                      setRegistrationData((current) => ({
+                        ...current,
+                        address: event.target.value,
+                      }))
+                    }
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
@@ -190,7 +220,13 @@ const SingUpShop = () => {
                     minLength={6}
                     maxLength={6}
                     required
-                    value={formData?.pinCode}
+                    value={registrationData.pinCode}
+                    onChange={(event) =>
+                      setRegistrationData((current) => ({
+                        ...current,
+                        pinCode: event.target.value,
+                      }))
+                    }
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
@@ -209,7 +245,13 @@ const SingUpShop = () => {
                     name="password"
                     autoComplete="current-password"
                     required
-                    value={formData?.password}
+                    value={registrationData.password}
+                    onChange={(event) =>
+                      setRegistrationData((current) => ({
+                        ...current,
+                        password: event.target.value,
+                      }))
+                    }
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                   {visible ? (

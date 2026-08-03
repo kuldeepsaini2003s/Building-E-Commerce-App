@@ -16,6 +16,11 @@ const SingUp = () => {
   const [avatar, setAvatar] = useState("/Photo.png");
   const [verificationSection, setVerificationSection] = useState(false);
   const [file, setFile] = useState(null);
+  const [registrationData, setRegistrationData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -25,12 +30,11 @@ const SingUp = () => {
     }
   };
 
-  const [formData, submitAction, isPending] = useActionState(
+  const [, submitAction, isPending] = useActionState(
     async (previousState, formData) => {
-      const name = formData?.get("name") || previousState?.name || "";
-      const email = formData?.get("email") || previousState?.email || "";
-      const password =
-        formData?.get("password") || previousState?.password || "";
+      const name = formData?.get("name") || registrationData.name;
+      const email = formData?.get("email") || registrationData.email;
+      const password = formData?.get("password") || registrationData.password;
 
       const payload = new FormData();
 
@@ -72,7 +76,7 @@ const SingUp = () => {
           showToast: true,
           message: error?.response?.data?.msg || "Failed to create user.",
         });
-        return { name, email, password };
+        return previousState;
       }
     }
   );
@@ -107,7 +111,13 @@ const SingUp = () => {
                     name="name"
                     autoComplete="name"
                     required
-                    value={formData?.name}
+                    value={registrationData.name}
+                    onChange={(event) =>
+                      setRegistrationData((current) => ({
+                        ...current,
+                        name: event.target.value,
+                      }))
+                    }
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
@@ -126,7 +136,13 @@ const SingUp = () => {
                     name="email"
                     autoComplete="email"
                     required
-                    value={formData?.email}
+                    value={registrationData.email}
+                    onChange={(event) =>
+                      setRegistrationData((current) => ({
+                        ...current,
+                        email: event.target.value,
+                      }))
+                    }
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                 </div>
@@ -145,7 +161,13 @@ const SingUp = () => {
                     name="password"
                     autoComplete="current-password"
                     required
-                    value={formData?.password}
+                    value={registrationData.password}
+                    onChange={(event) =>
+                      setRegistrationData((current) => ({
+                        ...current,
+                        password: event.target.value,
+                      }))
+                    }
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                   />
                   {visible ? (

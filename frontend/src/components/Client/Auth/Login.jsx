@@ -14,12 +14,12 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [visible, setVisible] = useState(false);
+  const [credentials, setCredentials] = useState({ email: "", password: "" });
 
-  const [formData, submitAction, isPending] = useActionState(
+  const [, submitAction, isPending] = useActionState(
     async (previousState, formData) => {
-      const email = formData?.get("email") || previousState?.email || "";
-      const password =
-        formData?.get("password") || previousState?.password || "";
+      const email = formData?.get("email") || credentials.email;
+      const password = formData?.get("password") || credentials.password;
 
       const toastId = toast.loading("Verifying your credentials...");
 
@@ -54,7 +54,7 @@ const Login = () => {
             error?.response?.data?.msg ||
             "Something went wrong please try again...",
         });
-        return { email, password };
+        return previousState;
       }
     }
   );
@@ -85,7 +85,13 @@ const Login = () => {
                   name="email"
                   autoComplete="email"
                   required
-                  value={formData?.email}
+                  value={credentials.email}
+                  onChange={(event) =>
+                    setCredentials((current) => ({
+                      ...current,
+                      email: event.target.value,
+                    }))
+                  }
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
@@ -103,7 +109,13 @@ const Login = () => {
                   name="password"
                   autoComplete="current-password"
                   required
-                  value={formData?.password}
+                  value={credentials.password}
+                  onChange={(event) =>
+                    setCredentials((current) => ({
+                      ...current,
+                      password: event.target.value,
+                    }))
+                  }
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
                 {visible ? (
@@ -137,7 +149,7 @@ const Login = () => {
                 </label>
               </div>
               <Link
-                to={"/forget-password"}
+                to={"/forgot-password"}
                 className={`${
                   isPending ? "cursor-not-allowed" : "cursor-pointer"
                 } font-medium text-blue-600 hover:text-blue-500 text-sm`}

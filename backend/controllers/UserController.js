@@ -49,21 +49,11 @@ const register = async (req, res) => {
 
     const existingUser = await User.findOne({ email });
 
-    const existingUserName = await User.findOne({ username });
-
     if (existingUser) {
       fs.unlinkSync(avatarFile.path);
       return res.status(400).json({
         success: false,
         msg: "User already exist with this email.",
-      });
-    }
-
-    if (existingUserName) {
-      fs.unlinkSync(avatarFile.path);
-      return res.status(400).json({
-        success: false,
-        msg: "Username already used choose a different one.",
       });
     }
 
@@ -134,7 +124,7 @@ const activeUser = async (req, res) => {
 
     const otp = tokenVerification?.otp;
 
-    if (!otp === activation_otp) {
+    if (otp !== activation_otp) {
       return res.status(400).json({
         success: false,
         msg: "You entered a Wrong OTP",
@@ -237,7 +227,7 @@ const resetPassword = async (req, res) => {
 
     const otp = tokenVerification.otp;
 
-    if (!otp === activation_otp) {
+    if (otp !== activation_otp) {
       return res.status(400).json({
         success: false,
         msg: "Invalid OTP",
@@ -354,6 +344,44 @@ const logoutUser = async (req, res) => {
     .clearCookie("accessToken", option)
     .clearCookie("refreshToken", option)
     .json({ success: false, msg: "User logged out successfully" });
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const { username } = req.body;
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, msg: "User not found" });
+    }
+
+    if (username) user.username = username;
+
+    if (req.file) {
+      const uploadedAvatar = await uploadOnCloudinary(req.file.path);
+      if (!uploadedAvatar) {
+        return res.status(500).json({
+          success: false,
+          msg: "Unable to upload profile picture.",
+        });
+      }
+      user.avatar = uploadedAvatar.secure_url;
+    }
+
+    await user.save();
+    const updatedUser = await User.findById(user._id).select(
+      "-password -refreshToken"
+    );
+
+    return res.status(200).json({
+      success: true,
+      msg: "Profile updated successfully",
+      data: updatedUser,
+    });
+  } catch (error) {
+    console.log("Error while updating user:", error);
+    return res.status(500).json({ success: false, msg: "Something went wrong" });
+  }
 };
 
 const getUser = async (req, res) => {
@@ -495,6 +523,7 @@ export {
   refreshAccessToken,
   loginUser,
   logoutUser,
+  updateUser,
   getUser,
   userGet,
 };

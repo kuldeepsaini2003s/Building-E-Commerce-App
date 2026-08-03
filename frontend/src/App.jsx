@@ -33,6 +33,9 @@ import AllCoupons from "./components/Shop/AllCoupons";
 import AllRefundOrders from "./components/Shop/AllRefundOrders";
 import ShopSettings from "./components/Shop/ShopSettings";
 import useFetchUserData from "./hooks/useFetchUserData";
+import ForgotPassword from "./components/Auth/ForgotPassword";
+import { BACKEND_SHOP, BACKEND_USER } from "./utils/constants";
+import Profile from "./components/Client/Profile";
 
 const App = () => {
   useFetchUserData();
@@ -81,11 +84,42 @@ const App = () => {
             <Route path="/wishlist" element={<Wishlist_Page />} />
             <Route path="/product/:id" element={<ProductDetailsPage />} />
             <Route path="/order-confirmation" element={<OrderConfirmation />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
           <Route path="/login" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route
+            path="/forgot-password"
+            element={
+              <ForgotPassword
+                apiBaseUrl={BACKEND_USER}
+                accountLabel="user"
+                loginPath="/login"
+              />
+            }
+          />
+          <Route
+            path="/forget-password"
+            element={
+              <ForgotPassword
+                apiBaseUrl={BACKEND_USER}
+                accountLabel="user"
+                loginPath="/login"
+              />
+            }
+          />
           <Route path="/create-shop" element={<SingUpShop />} />
           <Route path="/login-shop" element={<LoginShop />} />
+          <Route
+            path="/forgot-password-shop"
+            element={
+              <ForgotPassword
+                apiBaseUrl={BACKEND_SHOP}
+                accountLabel="shop"
+                loginPath="/login-shop"
+              />
+            }
+          />
           <Route element={<SellerSection />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/dashboard-orders" element={<AllOrders />} />
